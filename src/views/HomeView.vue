@@ -6,6 +6,8 @@ export default {
     return {
       message: "Welcome to Vue.js!",
       contacts: [],
+      currentContact: [],
+      newContactName: "",
     };
   },
   created: function () {
@@ -18,26 +20,31 @@ export default {
         console.log(response.data);
       });
     },
-    createContact: function () {
-      console.log("New Contact Created!");
-      var params = {
-        name: this.newContactName,
-        phone: this.newPhone,
-        email: this.newEmail,
-        birthday: this.newBirthday,
-        address: this.newAddress,
-      };
-      // console.log(params);
-      axios.post("/contacts", params).then((response) => {
-        console.log("Great Success!", response.data);
-        this.contacts.push(response.data);
-        this.newContactName = "";
-        this.newPhone = "";
-        this.newEmail = "";
-        this.newBirthday = "";
-        this.newAddress = "";
-      });
+    showContact: function (contact) {
+      console.log(contact);
+      this.currentContact = contact;
+      document.querySelector("#contact-info").showModal();
     },
+  },
+  createContact: function () {
+    console.log("New Contact Created!");
+    var params = {
+      name: this.newContactName,
+      phone: this.newPhone,
+      email: this.newEmail,
+      birthday: this.newBirthday,
+      address: this.newAddress,
+    };
+    // console.log(params);
+    axios.post("/contacts", params).then((response) => {
+      console.log("Great Success!", response.data);
+      this.contacts.push(response.data);
+      this.newContactName = "";
+      this.newPhone = "";
+      this.newEmail = "";
+      this.newBirthday = "";
+      this.newAddress = "";
+    });
   },
 };
 </script>
@@ -58,6 +65,7 @@ export default {
     <button v-on:click="createContact()">Create Contact</button>
     <h1>{{ message }}</h1>
     <div v-for="contact in contacts" v-bind:key="contact.id"></div>
+    <button v-on:click="showContact()">Show Contact</button>
   </div>
 </template>
 
